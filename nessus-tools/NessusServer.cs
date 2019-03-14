@@ -113,12 +113,12 @@ namespace nessus_tools
         [XmlElement("contents")]
         public Content Content { get; set; }
 
-        public bool isError()
+        public bool IsError()
         {
             return Status.Equals("ERROR");
         }
 
-        public bool isOK()
+        public bool IsOK()
         {
             return Status.Equals("OK");
         }
@@ -164,7 +164,7 @@ namespace nessus_tools
         }
 
         public string Token { get; set; }
-        private bool disposing;
+        private bool Disposing;
 
         public NessusServer(string URI)
         {
@@ -174,7 +174,7 @@ namespace nessus_tools
 
             //Ensure that SSL will succeed through certificate validation.
             ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(checkPolicy);
-            this.disposing = false;
+            this.Disposing = false;
         }
 
         public NessusServer() : this("https://localhost:8834") { }
@@ -345,7 +345,7 @@ namespace nessus_tools
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposing)
+            if (!this.Disposing)
             {
                 if (disposing)
                     Logout();

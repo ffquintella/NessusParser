@@ -25,7 +25,7 @@ namespace nessus_tools
 
         public Report()
         {
-            Name = "";
+            Name = string.Empty;
             ReportHosts = new ReportHosts();
         }
 
@@ -112,16 +112,26 @@ namespace nessus_tools
 
                 foreach (ReportItem item in ReportItems)
                 {
-                    if (item.Risk_Factor.Equals("critical", StringComparison.CurrentCultureIgnoreCase))
-                        criticals++;
-                    else if (item.Risk_Factor.Equals("high", StringComparison.CurrentCultureIgnoreCase))
-                        highs++;
-                    else if (item.Risk_Factor.Equals("medium", StringComparison.CurrentCultureIgnoreCase))
-                        mediums++;
-                    else if (item.Risk_Factor.Equals("low", StringComparison.CurrentCultureIgnoreCase))
-                        lows++;
-                    else
-                        none++;
+                    string risk = item.Risk_Factor.ToLower();
+                    switch (risk)
+                    {
+                        case "critical":
+                            criticals++;
+                            break;
+                        case "high":
+                            highs++;
+                            break;
+                        case "medium":
+                            mediums++;
+                            break;
+                        case "low":
+                            lows++;
+                            break;
+                        default:
+                            none++;
+                            break;
+                         
+                    }
                 }
 
                 if (criticals > 0)
@@ -240,7 +250,7 @@ namespace nessus_tools
         {
             get
             {
-                string fqdn = "";
+                string fqdn = string.Empty;
                 foreach (Tag t in HostProperties.Tags)
                 {
                     if (t.Name.Equals("host-fqdn"))
@@ -276,7 +286,7 @@ namespace nessus_tools
         /// </summary>
         public ReportHost()
         {
-            Name = "";
+            Name = string.Empty;
             HostProperties = new HostProperties();
             ReportItems = new List<ReportItem>();
         }
@@ -361,8 +371,8 @@ namespace nessus_tools
 
         public Tag()
         {
-            Name = "";
-            Value = "";
+            Name = string.Empty;
+            Value = string.Empty;
         }
 
         public Tag(XElement element) : this()
@@ -462,14 +472,19 @@ namespace nessus_tools
         {
             get
             {
-                if (Risk_Factor.Equals("critical", StringComparison.CurrentCultureIgnoreCase))
-                    return Criticality.Critical;
-                else if (Risk_Factor.Equals("high", StringComparison.CurrentCultureIgnoreCase))
-                    return Criticality.High;
-                else if (Risk_Factor.Equals("medium", StringComparison.CurrentCultureIgnoreCase))
-                    return Criticality.Medium;
-                else if (Risk_Factor.Equals("low", StringComparison.CurrentCultureIgnoreCase))
-                    return Criticality.Low;
+                string riskLower = Risk_Factor.ToLower();
+                switch (riskLower)
+                {
+                    case "critical":
+                        return Criticality.Critical;
+                    case "high":
+                        return Criticality.High;
+                    case "medium":
+                        return Criticality.Medium;
+                    case "low":
+                        return Criticality.Low;
+
+                }
 
                 return Criticality.None;
             }
@@ -478,15 +493,15 @@ namespace nessus_tools
         public ReportItem()
         {
             Port = 0;
-            ServiceName = "";
+            ServiceName = string.Empty;
             Protocol = "TCP";
             Severity = "none";
-            Description = "";
+            Description = string.Empty;
         }
 
         public ReportItem(XElement element) : this()
         {
-            Port = Int32.Parse(element.Attribute("port").Value);
+            Port = int.Parse(element.Attribute("port").Value);
             ServiceName = element.Attribute("svc_name").Value;
             Protocol = element.Attribute("protocol").Value;
             Severity = element.Attribute("severity").Value;

@@ -94,8 +94,8 @@ namespace nessus_tools
 
         public Policy()
         {
-            Name = "";
-            Comments = "";
+            Name = string.Empty;
+            Comments = string.Empty;
             ServerPreferences = new ServerPreferences();
             PluginPreferences = new PluginPreferences();
             FamilySelection = new FamilySelection();
@@ -235,13 +235,13 @@ namespace nessus_tools
 
         public Item()
         {
-            FullName = "";
-            PluginName = "";
+            FullName = string.Empty;
+            PluginName = string.Empty;
             PluginId = "0";
-            PreferenceName = "";
-            PreferenceType = "";
-            PreferenceValues = "";
-            SelectedValue = "";
+            PreferenceName = string.Empty;
+            PreferenceType = string.Empty;
+            PreferenceValues = string.Empty;
+            SelectedValue = string.Empty;
         }
     }
 
@@ -275,8 +275,8 @@ namespace nessus_tools
 
         public FamilyItem()
         {
-            Name = "";
-            Status = "";
+            Name = string.Empty;
+            Status = string.Empty;
         }
     }
 
