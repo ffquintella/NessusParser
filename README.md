@@ -1,4 +1,4 @@
-Nessus Tools
+Nessus C# Parser
 =================================
 
 C# to parse Nessus report (XML) files. 
