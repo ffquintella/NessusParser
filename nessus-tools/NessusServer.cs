@@ -10,6 +10,7 @@ using System.Net;
 using System.Web;
 using System.Xml.Serialization;
 using System.Collections;
+using System.Net.Http;
 
 namespace nessus_tools
 {
@@ -201,12 +202,16 @@ namespace nessus_tools
         /// <returns>XDocument</returns>
         private XDocument SendRequest(string uri, string parameters)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            /*HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+
             request.KeepAlive = true;
             request.ProtocolVersion = HttpVersion.Version10;
             request.Method = "POST";
-            request.CookieContainer = new CookieContainer();
+            request.CookieContainer = new CookieContainer();*/
 
+            
+            var cookieContainer = new CookieContainer();
+            
             if (Token != null)  
             {
                 Uri u = new Uri(uri);
@@ -214,33 +219,43 @@ namespace nessus_tools
                 if (u.Host.Contains('.'))
                     domain = u.Host.Substring(u.Host.IndexOf('.'));
                 
-                request.CookieContainer.Add(new Cookie("token", Token, "/", domain));
+                cookieContainer.Add(new Cookie("token", Token, "/", domain));
             }
-
-            byte[] postBytes = Encoding.ASCII.GetBytes(parameters);
-
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = postBytes.Length;
-            Stream requestStream = request.GetRequestStream();
-            requestStream.Write(postBytes, 0, postBytes.Length);
-            requestStream.Close();
-
-            Logging.Log(LogLevel.Debug, "POST " + uri);
-
-            XDocument xmldoc;
-            // Watch for this, Nessus wont return XML in case of an error (like authentication)
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            
+            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) {BaseAddress = new Uri(uri)})
             {
-                Stream strm = response.GetResponseStream();
+                var request = new HttpRequestMessage(HttpMethod.Post, uri);
+                request.Version = HttpVersion.Version10;     
+                
+                byte[] postBytes = Encoding.ASCII.GetBytes(parameters);
+
+                client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-form-urlencoded");
+                
+                request.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                request.Headers.Add("Content-Length", postBytes.Length.ToString());
+                
+                //request.Content = new StringContent(parameters, Encoding.UTF8, "application/x-www-form-urlencoded");
+                request.Content = new ByteArrayContent(postBytes);
+
+                using var result = client.Send(request);
+                
+                Logging.Log(LogLevel.Debug, "POST " + uri);
+
+                Stream strm = result.Content.ReadAsStream();
 
                 StreamReader reader = new StreamReader(strm);
-                xmldoc = XDocument.Parse(reader.ReadToEnd());
-            }
-
-            if (xmldoc != null)
+                var xmldoc = XDocument.Parse(reader.ReadToEnd());
+                
                 Logging.Log(LogLevel.Debug, xmldoc.ToString());
 
-            return xmldoc;
+                return xmldoc;
+                
+
+            }
+
+
+
         }
 
         /// <summary>
