@@ -388,6 +388,12 @@ namespace nessus_tools
     public sealed class ReportItem
     {
         /// <summary>
+        /// Plugin Id
+        /// </summary>
+        [XmlAttribute("pluginID")]
+        public string PluginId { get; set; }
+        
+        /// <summary>
         /// Plugin Name
         /// </summary>
         [XmlAttribute("pluginName")]
