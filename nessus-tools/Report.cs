@@ -438,11 +438,13 @@ namespace nessus_tools
         [XmlElement("cvss3_temporal_score")] public float? CVSS3TemporalScore { get; set; }
         [XmlElement("cvssV3_impactScore")] public float? CVSS3ImpactScore { get; set; }
         [XmlElement("cvss3_temporal_vector")] public string? CVSS3TemporalVector { get; set; } 
+        [XmlElement("cvss3_vector")] public string? CVSS3Vector { get; set; }
         
         [XmlElement("cvss_base_score")] public float? CVSSBaseScore { get; set; }
         [XmlElement("cvss_temporal_score")] public float? CVSSTemporalScore { get; set; }
         [XmlElement("cvss_temporal_vector")] public string? CVSSTemporalVector { get; set; } 
         [XmlElement("cvss_score_source")] public string? CVSSScoreSource { get; set; } 
+        [XmlElement("cvss_vector")] public string? CVSSVector { get; set; }
         
         [XmlElement("exploit_available")] public bool? ExploitAvailable { get; set; }
         [XmlElement("exploit_code_maturity")] public string? ExploitCodeMaturity { get; set; }
@@ -453,11 +455,15 @@ namespace nessus_tools
         [XmlElement("threat_intensity_last_28")] public string? ThreatIntensityLast28 { get; set; }
         [XmlElement("threat_recency")] public string? ThreatRecency { get; set; }
         [XmlElement("threat_sources_last_28")] public string? ThreatSourcesLast28 { get; set; }
-
-        [XmlElement("tra")] public List<string> TRA { get; set; } = new List<string>();
+        
         [XmlElement("vpr_score")] public float? VPRScore { get; set; }
         [XmlElement("vuln_publication_date")] public string? VulnerabilityPublicationDate { get; set; }
-        [XmlElement("xref")] public string? XRef { get; set; }
+        [XmlElement("xref")] public List<string> Xref { get; set; } = new List<string>();
+        [XmlElement("iava")] public List<string> IAVA { get; set; } = new List<string>();
+        [XmlElement("msft")] public List<string> Msft { get; set; } = new List<string>();
+        [XmlElement("mskb")] public List<string> Mskb { get; set; } = new List<string>();
+        [XmlElement("see_also")] public string? SeeAlso { get; set; }
+        [XmlElement("stig_severity")] public string? StigSeverity { get; set; }
         
         
         
