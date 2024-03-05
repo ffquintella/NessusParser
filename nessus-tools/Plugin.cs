@@ -43,11 +43,11 @@ namespace nessus_tools
         /// Generates the Plugin from the ReportItem given.
         /// </summary>
         /// <param name="item">ReportItem</param>
-        public Plugin(ReportItem item) : this(item.Plugin_Name, item.Plugin_Type, DateTime.Now, item.Plugin_Output, item.Description, item.Criticality)
+        public Plugin(ReportItem item) : this(item.Plugin_Name, item.Plugin_Type, DateTime.Now, item.PluginOutput, item.Description, item.Criticality)
         {
             try
             {
-                LastModified = DateTime.Parse(item.Plugin_Modification_Date);
+                LastModified = DateTime.Parse(item.PluginModificationDate);
                 Severity = Int32.Parse(item.Severity);
             }catch{}
 

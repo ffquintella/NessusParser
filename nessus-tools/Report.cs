@@ -112,7 +112,7 @@ namespace nessus_tools
 
                 foreach (ReportItem item in ReportItems)
                 {
-                    string risk = item.Risk_Factor.ToLower();
+                    string risk = item.RiskFactor.ToLower();
                     switch (risk)
                     {
                         case "critical":
@@ -423,6 +423,38 @@ namespace nessus_tools
         [XmlAttribute("severity")]
         public string Severity { get; set; }
 
+        [XmlElement("age_of_vuln")] public string AgeOfVulnerability { get; set; } = String.Empty;
+        [XmlElement("cpe")] public string Cpe { get; set; } = String.Empty;
+        
+        [XmlElement("cve")] public List<string> CVEs { get; set; } = new List<string>();
+        
+        [XmlElement("cvss3_base_score")] public float? CVSS3BaseScore { get; set; }
+        [XmlElement("cvss3_temporal_score")] public float? CVSS3TemporalScore { get; set; }
+        [XmlElement("cvssV3_impactScore")] public float? CVSS3ImpactScore { get; set; }
+        [XmlElement("cvss3_temporal_vector")] public string? CVSS3TemporalVector { get; set; } 
+        
+        [XmlElement("cvss_base_score")] public float? CVSSBaseScore { get; set; }
+        [XmlElement("cvss_temporal_score")] public float? CVSSTemporalScore { get; set; }
+        [XmlElement("cvss_temporal_vector")] public string? CVSSTemporalVector { get; set; } 
+        [XmlElement("cvss_score_source")] public string? CVSSScoreSource { get; set; } 
+        
+        [XmlElement("exploit_available")] public bool? ExploitAvailable { get; set; }
+        [XmlElement("exploit_code_maturity")] public string? ExploitCodeMaturity { get; set; }
+        [XmlElement("exploitability_ease")] public string? ExploitabilityEasy { get; set; }
+        [XmlElement("exploited_by_nessus")] public bool? ExploitedByNessus { get; set; }
+        
+        [XmlElement("patch_publication_date")] public string? PatchPublicationDate { get; set; }
+        [XmlElement("threat_intensity_last_28")] public string? ThreatIntensityLast28 { get; set; }
+        [XmlElement("threat_recency")] public string? ThreatRecency { get; set; }
+        [XmlElement("threat_sources_last_28")] public string? ThreatSourcesLast28 { get; set; }
+
+        [XmlElement("tra")] public List<string> TRA { get; set; } = new List<string>();
+        [XmlElement("vpr_score")] public float? VPRScore { get; set; }
+        [XmlElement("vuln_publication_date")] public string? VulnerabilityPublicationDate { get; set; }
+        [XmlElement("xref")] public string? XRef { get; set; }
+        
+        
+        
         /// <summary>
         /// Description of the ReportItem
         /// </summary>
@@ -439,7 +471,7 @@ namespace nessus_tools
         /// Plugin Modification Date
         /// </summary>
         [XmlElement("plugin_modification_date")]
-        public string Plugin_Modification_Date { get; set; }
+        public string PluginModificationDate { get; set; }
 
         /// <summary>
         /// Name of the plugin used to generate this ReportItem.
@@ -457,7 +489,7 @@ namespace nessus_tools
         /// Risk Factor
         /// </summary>
         [XmlElement("risk_factor")]
-        public string Risk_Factor { get; set; }
+        public string RiskFactor { get; set; }
 
         /// <summary>
         /// Solution
@@ -475,7 +507,7 @@ namespace nessus_tools
         /// Actual plugin output.
         /// </summary>
         [XmlElement("plugin_output")]
-        public string Plugin_Output { get; set; }
+        public string PluginOutput { get; set; }
 
         /// <summary>
         /// Criticality of this ReportItem. 
@@ -484,7 +516,7 @@ namespace nessus_tools
         {
             get
             {
-                string riskLower = Risk_Factor.ToLower();
+                string riskLower = RiskFactor.ToLower();
                 switch (riskLower)
                 {
                     case "critical":
