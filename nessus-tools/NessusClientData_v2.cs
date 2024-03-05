@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace nessus_tools
 {
@@ -39,29 +40,33 @@ namespace nessus_tools
         /// </summary>
         /// <param name="path">Path of file to parse.</param>
         /// <returns>NessusClientData_v2 object; null if an error occurred.</returns>
-        public static NessusClientData_v2 Parse(string path)
+        public static async Task<NessusClientData_v2> ParseAsync(string path)
         {
-            NessusClientData_v2 data = null;
-            XmlSerializer serializer = new XmlSerializer(typeof(NessusClientData_v2));
-            TextReader reader = null;
-            try
+            return await Task.Run(() =>
             {
-                reader = new StreamReader(File.OpenRead(path));
-                data = (NessusClientData_v2)serializer.Deserialize(reader);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: Could not parse (NESSUS?) file {0}: {1} {2}", path, e.GetType(), e.Message);
-            }
-            finally
-            {
-                if (reader != null)
+                NessusClientData_v2 data = null;
+                XmlSerializer serializer = new XmlSerializer(typeof(NessusClientData_v2));
+                TextReader reader = null;
+                try
                 {
-                    reader.Close();
+                    reader = new StreamReader(File.OpenRead(path));
+                    data = (NessusClientData_v2)serializer.Deserialize(reader);
                 }
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error: Could not parse (NESSUS?) file {0}: {1} {2}", path, e.GetType(),
+                        e.Message);
+                }
+                finally
+                {
+                    if (reader != null)
+                    {
+                        reader.Close();
+                    }
+                }
 
-            return data;
+                return data;
+            });
         }
 
         /// <summary>

@@ -388,6 +388,18 @@ namespace nessus_tools
     public sealed class ReportItem
     {
         /// <summary>
+        /// Plugin Name
+        /// </summary>
+        [XmlAttribute("pluginName")]
+        public string PluginName { get; set; }
+        
+        /// <summary>
+        /// Plugin Name
+        /// </summary>
+        [XmlAttribute("pluginFamily")]
+        public string PluginFamily { get; set; }
+        
+        /// <summary>
         /// Port
         /// </summary>
         [XmlAttribute("port")]
