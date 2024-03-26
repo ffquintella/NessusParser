@@ -72,8 +72,12 @@ namespace nessus_tools
     public sealed class PluginComparer : IEqualityComparer<Plugin>
     {
 
-        public bool Equals(Plugin x, Plugin y)
+        public bool Equals(Plugin? x, Plugin? y)
         {
+            if (x == null || y == null)
+            {
+                return false;
+            }
             return (x.GetHashCode() == y.GetHashCode());
         }
 
