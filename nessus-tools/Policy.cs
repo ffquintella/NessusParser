@@ -33,15 +33,15 @@ namespace nessus_tools
 
         public Policy this[int index]
         {
-            get { return (Policy)List[index]; }
+            get { return (Policy)List[index]!; }
             set { List[index] = value; }
         }
 
-        public Policy this[string name]
+        public Policy? this[string name]
         {
             get
             {
-                Policy p = null;
+                Policy? p = null;
                 foreach (Policy policy in this)
                 {
                     if (policy.Name.Equals(name))
@@ -106,15 +106,15 @@ namespace nessus_tools
         /// </summary>
         /// <param name="path">Path to the nessus report file to parse.</param>
         /// <returns>Policy; null if an error occurred.</returns>
-        public static Policy Parse(string path)
+        public static Policy? Parse(string path)
         {
-            Policy policy = null;
+            Policy? policy = null;
             XmlSerializer serializer = new XmlSerializer(typeof(NessusClientData_v2));
-            TextReader reader = null;
+            TextReader? reader = null;
             try
             {
                 reader = new StreamReader(File.OpenRead(path));
-                NessusClientData_v2 data = (NessusClientData_v2)serializer.Deserialize(reader);
+                NessusClientData_v2 data = (NessusClientData_v2)serializer.Deserialize(reader)!;
                 policy = data.Policy;
             }
             catch (Exception e)
@@ -162,9 +162,9 @@ namespace nessus_tools
             return false;
         }
 
-        public Preference this[int index]
+        public Preference? this[int index]
         {
-            get { return (Preference)List[index]; }
+            get { return (Preference?)List[index]; }
             set { List[index] = value; }
         }
     }
@@ -176,10 +176,10 @@ namespace nessus_tools
     {
 
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [XmlElement("value")]
-        public string Value { get; set;}
+        public string Value { get; set;} = string.Empty;
 
     }
 
@@ -193,9 +193,9 @@ namespace nessus_tools
             return List.Add(item);
         }
 
-        public Item this[int index]
+        public Item? this[int index]
         {
-            get { return (Item)List[index]; }
+            get { return (Item?)List[index]; }
             set { List[index] = value; }
         }
     }
@@ -255,9 +255,9 @@ namespace nessus_tools
             return List.Add(item);
         }
 
-        public FamilyItem this[int index]
+        public FamilyItem? this[int index]
         {
-            get { return (FamilyItem)List[index]; }
+            get { return (FamilyItem?)List[index]; }
             set { List[index] = value; }
         }
     }

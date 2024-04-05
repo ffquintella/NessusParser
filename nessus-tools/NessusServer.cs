@@ -17,8 +17,7 @@ namespace nessus_tools
 
     public sealed class User
     {
-        [XmlElement("name")]
-        public string Name { get; set; }
+        [XmlElement("name")] public string Name { get; set; } = string.Empty;
 
         //[XmlElement("admin")]
         //public bool isAdmin { get; set; }
@@ -46,29 +45,27 @@ namespace nessus_tools
 
     public sealed class Content
     {
-        [XmlElement("token")]
-        public string Token { get; set; }
+        [XmlElement("token")] public string Token { get; set; } = string.Empty;
 
         [XmlElement("user")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
-        [XmlElement("server_uuid")]
-        public string ServerUUID { get; set; }
+        [XmlElement("server_uuid")] public string ServerUUID { get; set; } = string.Empty;
 
         [XmlElement("plugin_set")]
-        public string PluginSet { get; set; }
+        public string PluginSet { get; set; } = string.Empty;
 
         [XmlElement("loaded_plugin_set")]
-        public string LoadedPluginSet { get; set; }
+        public string LoadedPluginSet { get; set; } = string.Empty;
 
         [XmlElement("scanner_boottime")]
         public int ScannerBoottime { get; set; }
 
         [XmlElement("load")]
-        public ServerLoad ServerLoad { get; set; }
+        public ServerLoad? ServerLoad { get; set; }
 
         [XmlElement("platform")]
-        public string Platform { get; set; }
+        public string Platform { get; set; } = string.Empty;
 
         //TODO Need to figure out how to handle boolean values correctly.
         //[XmlElement("msp")]
@@ -78,24 +75,24 @@ namespace nessus_tools
         public int IdleTimeout { get; set; }
 
         [XmlText]
-        public string Text { get; set; }
+        public string Text { get; set; } = string.Empty;
 
         [XmlArray("reports")]
         [XmlArrayItem("report")]
-        public List<NessusReport> Reports;
+        public List<NessusReport> Reports = new (); 
 
     }
 
     public sealed class NessusReport
     {
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [XmlElement("status")]
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
 
         [XmlElement("readableName")]
-        public string ReadableName { get; set; }
+        public string ReadableName { get; set; } = string.Empty;
 
         [XmlElement("timestamp")]
         public int Timestamp { get; set; }
@@ -109,10 +106,10 @@ namespace nessus_tools
         public int Sequence { get; set; }
 
         [XmlElement("status")]
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
 
         [XmlElement("contents")]
-        public Content Content { get; set; }
+        public Content? Content { get; set; }
 
         public bool IsError()
         {
@@ -129,13 +126,13 @@ namespace nessus_tools
         /// </summary>
         /// <param name="doc">XDocument object to parse.</param>
         /// <returns>Reply</returns>
-        public static Reply Parse(XDocument doc)
+        public static Reply? Parse(XDocument doc)
         {
-            Reply reply = null;
+            Reply? reply = null;
             XmlSerializer serializer = new XmlSerializer(typeof(Reply));
             try
             {
-                reply = (Reply)serializer.Deserialize(new StringReader(doc.ToString()));
+                reply = (Reply?)serializer.Deserialize(new StringReader(doc.ToString()));
             }
             catch (Exception e)
             {
@@ -164,7 +161,7 @@ namespace nessus_tools
             get { return new Random().Next(1,9999); }
         }
 
-        public string Token { get; set; }
+        public string Token { get; set; } = string.Empty;
         private bool Disposing;
 
         public NessusServer(string URI)
@@ -174,7 +171,7 @@ namespace nessus_tools
                 this.URI = this.URI.Substring(0, this.URI.Length - 1);
 
             //Ensure that SSL will succeed through certificate validation.
-            ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(checkPolicy);
+            ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(checkPolicy!);
             this.Disposing = false;
         }
 
@@ -273,8 +270,10 @@ namespace nessus_tools
             bool ok = false;
             try
             {
-                Reply reply = Reply.Parse(SendRequest(URI + "/login", p));
-                Token = reply.Content.Token;
+                Reply? reply = Reply.Parse(SendRequest(URI + "/login", p));
+                if (reply == null || reply.IsError())
+                    return false;
+                Token = reply.Content!.Token;
                 ok = true;
             }
             catch (Exception e)
@@ -299,8 +298,10 @@ namespace nessus_tools
         /// <returns>ServerLoad</returns>
         public ServerLoad GetServerLoad()
         {
-            Reply reply = Reply.Parse(SendRequest(URI + "/server/load", "seq=" + Random));
-            return reply.Content.ServerLoad;
+            Reply? reply = Reply.Parse(SendRequest(URI + "/server/load", "seq=" + Random));
+            if (reply == null)
+                return new ServerLoad();
+            return reply.Content!.ServerLoad!;
         }
 
         /// <summary>
@@ -309,8 +310,10 @@ namespace nessus_tools
         /// <returns>string</returns>
         public string GetPlatform()
         {
-            Reply reply = Reply.Parse(SendRequest(URI + "/server/load", "seq=" + Random));
-            return reply.Content.Platform;
+            Reply? reply = Reply.Parse(SendRequest(URI + "/server/load", "seq=" + Random));
+            if (reply == null)
+                return string.Empty;
+            return reply.Content!.Platform;
         }
 
         /// <summary>
@@ -319,11 +322,11 @@ namespace nessus_tools
         /// <returns>List containing NessusReport objects.</returns>
         public List<NessusReport> GetReports()
         {
-            Reply reply = Reply.Parse(SendRequest(URI + "/report/list", "seq=" + Random));
+            Reply? reply = Reply.Parse(SendRequest(URI + "/report/list", "seq=" + Random));
             if (reply != null)
-                return reply.Content.Reports;
+                return reply.Content!.Reports;
 
-            return null;
+            return new List<NessusReport>();
         }
 
         /// <summary>

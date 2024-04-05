@@ -16,8 +16,8 @@ namespace nessus_tools
         public string Output { get; set; }
         public Criticality Criticality { get; set; }
         public string Description { get; set; }
-        public string Synopsis { get; set; }
-        public string Solution { get; set; }
+        public string Synopsis { get; set; } = string.Empty;
+        public string Solution { get; set; } = string.Empty;
         public int Severity { get; set; }
 
         /// <summary>

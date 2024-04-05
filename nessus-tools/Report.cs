@@ -34,15 +34,15 @@ namespace nessus_tools
         /// </summary>
         /// <param name="path">Path to the file to parse. (*.nessus)</param>
         /// <returns>Report; null if an error occurred.</returns>
-        public static Report Parse(string path)
+        public static Report? Parse(string path)
         {
-            Report report = null;
+            Report? report = null;
             XmlSerializer serializer = new XmlSerializer(typeof(NessusClientData_v2));
-            TextReader reader = null;
+            TextReader? reader = null;
             try
             {
                 reader = new StreamReader(File.OpenRead(path));
-                NessusClientData_v2 data = (NessusClientData_v2)serializer.Deserialize(reader);
+                NessusClientData_v2 data = (NessusClientData_v2)serializer.Deserialize(reader)!;
                 report = data.Report;
             }
             catch (Exception e)
@@ -301,8 +301,12 @@ namespace nessus_tools
     public sealed class ReportHostComparer : IEqualityComparer<ReportHost>
     {
 
-        public bool Equals(ReportHost x, ReportHost y)
+        public bool Equals(ReportHost? x, ReportHost? y)
         {
+            if (x == null && y == null)
+                return true;
+            if (x == null || y == null)
+                return false;
             return (x.GetHashCode() == y.GetHashCode());
         }
 
@@ -328,9 +332,9 @@ namespace nessus_tools
             return false;
         }
 
-        public ReportHost this[int index]
+        public ReportHost? this[int index]
         {
-            get { return (ReportHost)List[index]; }
+            get { return (ReportHost?)List[index]; }
             set { List[index] = value; }
         }
     }
@@ -377,7 +381,7 @@ namespace nessus_tools
 
         public Tag(XElement element) : this()
         {
-            Name = element.Attribute("name").Value;
+            Name = element.Attribute("name")!.Value;
             Value = element.Value;
         }
     }
@@ -391,19 +395,19 @@ namespace nessus_tools
         /// Plugin Id
         /// </summary>
         [XmlAttribute("pluginID")]
-        public string PluginId { get; set; }
+        public string PluginId { get; set; } = string.Empty;
         
         /// <summary>
         /// Plugin Name
         /// </summary>
         [XmlAttribute("pluginName")]
-        public string PluginName { get; set; }
+        public string PluginName { get; set; } = string.Empty;
         
         /// <summary>
         /// Plugin Name
         /// </summary>
         [XmlAttribute("pluginFamily")]
-        public string PluginFamily { get; set; }
+        public string PluginFamily { get; set; } = string.Empty;
         
         /// <summary>
         /// Port
@@ -477,49 +481,49 @@ namespace nessus_tools
         /// Filename of the plugin ran for this ReportItem.
         /// </summary>
         [XmlElement("fname")]
-        public string FName { get; set; }
+        public string FName { get; set; } = string.Empty;
 
         /// <summary>
         /// Plugin Modification Date
         /// </summary>
         [XmlElement("plugin_modification_date")]
-        public string PluginModificationDate { get; set; }
+        public string PluginModificationDate { get; set; } = string.Empty;
 
         /// <summary>
         /// Name of the plugin used to generate this ReportItem.
         /// </summary>
         [XmlElement("plugin_name")]
-        public string Plugin_Name { get; set; }
+        public string Plugin_Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Type of plugin.
         /// </summary>
         [XmlElement("plugin_type")]
-        public string Plugin_Type { get; set; }
+        public string Plugin_Type { get; set; } = string.Empty;
 
         /// <summary>
         /// Risk Factor
         /// </summary>
         [XmlElement("risk_factor")]
-        public string RiskFactor { get; set; }
+        public string RiskFactor { get; set; } = string.Empty;
 
         /// <summary>
         /// Solution
         /// </summary>
         [XmlElement("solution")]
-        public string Solution { get; set; }
+        public string Solution { get; set; } = string.Empty;
 
         /// <summary>
         /// Synopsis
         /// </summary>
         [XmlElement("synopsis")]
-        public string Synopsis { get; set; }
+        public string Synopsis { get; set; } = string.Empty;
 
         /// <summary>
         /// Actual plugin output.
         /// </summary>
         [XmlElement("plugin_output")]
-        public string PluginOutput { get; set; }
+        public string PluginOutput { get; set; } = string.Empty;
 
         /// <summary>
         /// Criticality of this ReportItem. 
@@ -557,10 +561,10 @@ namespace nessus_tools
 
         public ReportItem(XElement element) : this()
         {
-            Port = int.Parse(element.Attribute("port").Value);
-            ServiceName = element.Attribute("svc_name").Value;
-            Protocol = element.Attribute("protocol").Value;
-            Severity = element.Attribute("severity").Value;
+            Port = int.Parse(element.Attribute("port")!.Value);
+            ServiceName = element.Attribute("svc_name")!.Value;
+            Protocol = element.Attribute("protocol")!.Value;
+            Severity = element.Attribute("severity")!.Value;
             //TODO More child elements to parse here.
         }
 

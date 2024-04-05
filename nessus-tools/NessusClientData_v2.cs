@@ -19,38 +19,30 @@ namespace nessus_tools
         /// Policy for this scan/report.
         /// </summary>
         [XmlElement("Policy")]
-        public Policy Policy
-        {
-            get;
-            set;
-        }
+        public Policy? Policy { get; set; }
 
         /// <summary>
         /// Report for this scan/report.
         /// </summary>
         [XmlElement("Report")]
-        public Report Report
-        {
-            get;
-            set;
-        }
+        public Report? Report { get; set; }
 
         /// <summary>
         /// Parses the File at the given path and returns a NessusClientData_v2 object.
         /// </summary>
         /// <param name="path">Path of file to parse.</param>
         /// <returns>NessusClientData_v2 object; null if an error occurred.</returns>
-        public static async Task<NessusClientData_v2> ParseAsync(string path)
+        public static async Task<NessusClientData_v2?> ParseAsync(string path)
         {
             return await Task.Run(() =>
             {
-                NessusClientData_v2 data = null;
+                NessusClientData_v2? data = null;
                 XmlSerializer serializer = new XmlSerializer(typeof(NessusClientData_v2));
-                TextReader reader = null;
+                TextReader? reader = null;
                 try
                 {
                     reader = new StreamReader(File.OpenRead(path));
-                    data = (NessusClientData_v2)serializer.Deserialize(reader);
+                    data = (NessusClientData_v2?)serializer.Deserialize(reader);
                 }
                 catch (Exception e)
                 {
@@ -78,7 +70,7 @@ namespace nessus_tools
         public static bool Save(NessusClientData_v2 data, string path)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(NessusClientData_v2));
-            TextWriter writer = null;
+            TextWriter? writer = null;
             bool ok = false;
             try
             {

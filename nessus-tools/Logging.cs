@@ -30,7 +30,7 @@ namespace nessus_tools
 
             if (FileLoggingEnabled)
             {
-                string path = Environment.CurrentDirectory +"\\"+ Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName) +".log";
+                string path = Environment.CurrentDirectory +"\\"+ Path.GetFileName(Process.GetCurrentProcess().MainModule!.FileName) +".log";
                 using (Stream s = File.Open(path, FileMode.Append))
                 {
                     byte[] b = Encoding.ASCII.GetBytes(line);
