@@ -170,8 +170,10 @@ namespace nessus_tools
             if (this.URI.EndsWith("/"))
                 this.URI = this.URI.Substring(0, this.URI.Length - 1);
 
+            #pragma warning disable SYSLIB0014
             //Ensure that SSL will succeed through certificate validation.
             ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(checkPolicy!);
+            #pragma warning restore SYSLIB0014
             this.Disposing = false;
         }
 
